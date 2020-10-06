@@ -1,0 +1,429 @@
+* {
+    box-sizing: border-box;
+}
+
+/* Remove padding on bottom where app-actions section used to be */
+#app-content-wrapper #app-content{
+    padding-bottom: 0;
+}
+
+.bldg-depth-lab{
+    width: 5px;
+    align: right;
+}
+.bldg-depth-lab-first{
+    width: 43px;
+    align: right;
+}
+.bldg-depth-val{
+    width: 50px;
+    align: left;
+}
+.bldg-lab {
+    width: 50px;
+    align: right;
+}
+.bldg-val{
+    width: 50px;
+    align: left;
+}
+
+.landuse1{
+    width: 100px;
+    align: left;
+}
+
+.info-btn {
+    background-color: none;
+    border: none;
+    color: blue;
+    padding: 0px 0px;
+    font-size: 10px;
+    cursor: pointer;
+}
+
+/* Create a custom checkbox */
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 15px;
+  width: 15px;
+  background-color: #eee;
+  border-radius: 50%;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+[class*="col-"] {
+    float: left;
+    padding-left: 20px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    padding-right: 0px;
+    display: block;
+}
+
+.col-1 {width: 8.33%;}
+.col-2 {width: 16.66%;}
+.col-3 {width: 25%;}
+.col-4 {width: 33.33%;}
+.col-5 {width: 41.66%;}
+.col-6 {width: 50%;}
+.col-7 {width: 58.33%;}
+.col-8 {width: 66.66%;}
+.col-9 {width: 75%;}
+.col-10 {width: 83.33%;}
+.col-11 {width: 91.66%;}
+.col-12 {width: 100%;}
+
+
+/* Style the button that is used to open and close the collapsible content */
+.collapsible {
+    color: #000000;
+    background-color: #FFFFFF;
+    border: none;
+    display: block;
+    text-align: center;
+    padding: 0;
+    border-radius: 5px;
+    width: 20px;
+    transition: all 0.5s;
+    cursor: pointer;
+    float: left;
+}
+/* Add a background color to the button if it is clicked on */
+.collapsible:hover {
+    background-color: #D3D3D3;
+}
+/* Style the button that is used to download files */
+.downloadBtn {
+    color: #000000;
+    background-color: #FFFFFF;
+    border: none;
+    display: block;
+    text-align: center;
+    padding: 0;
+    border-radius: 5px;
+    width: 90px;
+    transition: all 0.5s;
+    cursor: pointer;
+}
+/* Add a background color to the button if it is clicked on */
+.downloadBtn:hover {
+    background-color: #D3D3D3;
+}
+
+/* Customize the label (the container) */
+.container {
+  display: block;
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  font-size: 12px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* On mouse-over, add a grey background color */
+.container:hover input ~ .checkmark {
+  background-color: #ccc;
+}
+
+/* Hide the browser's default checkbox */
+.container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+/* When the checkbox is checked, add a blue background */
+.container input:checked ~ .checkmark {
+  background-color: #2196F3;
+}
+
+/* Show the checkmark when checked */
+.container input:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Style the checkmark/indicator */
+.container .checkmark:after {
+  left: 5px;
+  top: 5px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: white;
+}
+
+.current {
+    background-color: #777;
+    color: white;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 13px 20px;
+    font-size: 17px;
+    width: 25%;
+    text-align: center;
+}
+
+
+.form-container{
+    height:40%;
+    overflow:auto;
+}
+
+.header {
+    padding: 0px;
+}
+
+.hideDiv {
+    display: none;
+}
+
+
+/* Style the input fields */
+.input {
+  padding: 0px;
+  width: 100%;
+  font-size: 17px;
+  font-family: Raleway;
+  display: inline-block;
+  /*border: 1px solid #aaaaaa;*/
+}
+
+.input[type=text] {
+    width: 25%;
+    padding: 0px;
+}
+
+/* Mark input boxes that gets an error on validation: */
+input.invalid {
+  background-color: #ffdddd;
+}
+
+.main {
+    height: 100%;
+    width: 90%;
+    float: left;
+    padding-left: 0px;
+    padding-right: 0px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+
+.menu {
+    width: 100%;
+    float: left;
+    padding-left: 30px;
+    padding-top: 0px;
+    display: block;
+}
+
+.panel{
+    height:40%;
+    padding-left: 15px;
+    padding-right: 0px;
+}
+
+.panel-heading{
+    height:50px;
+    font-weight:bold;
+    font-size:0.85em;
+    padding-left: 15px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+
+
+/* Style the form */
+#regForm {
+  background-color: #ffffff;
+  margin: 100px auto;
+  padding: 40px;
+  width: 70%;
+  min-width: 300px;
+}
+
+.row {
+    display = block;
+    padding = 15px;
+}
+
+.row::after {
+    content="";
+    clear: both;
+    display: table;
+}
+
+.input-menu {
+    margin: 20px;
+}
+
+.map {
+    height: 95%;
+    width: 100%;
+}
+
+.ol-legend ul {
+    margin-bottom: 7px;
+}
+.ol-legend ul li {
+    overflow: visible;
+    text-align: right;
+}
+
+.ol-attribution {
+    font: 12.5px sans-serif;
+    bottom: 1em;
+}
+
+/* Make circles that indicate the steps of the form: */
+.step {
+  height: 15px;
+  width: 15px;
+  margin: 0 2px;
+  background-color: #bbbbbb;
+  border: none;
+  border-radius: 50%;
+  display: inline-block;
+  opacity: 0.5;
+}
+
+/* Mark the active step: */
+.step.active {
+  opacity: 1;
+}
+
+/* Mark the steps that are finished and valid: */
+.step.finish {
+  background-color: #4CAF50;
+}
+
+.submit-button {
+  border-radius: 15px;
+  background-color: #26b406;
+  border: none;
+  color: #FFFFFF;
+  text-align: center;
+  font-size: 20px;
+  padding: 12px;
+  width: 250px;
+  transition: all 0.5s;
+  cursor: pointer;
+  margin: 5px;
+}
+
+.submit-button span {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 0.5s;
+}
+
+.submit-button span:after {
+  content: '\00bb';
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  right: -20px;
+  transition: 0.5s;
+}
+
+.submit-button:hover span {
+  padding-right: 20px;
+}
+
+.submit-button:hover span:after {
+  opacity: 1;
+  right: 0;
+}
+
+/* Hide all steps by default: */
+.tab {
+  display: none;
+}
+
+.tabcontent {
+    color: white;
+    display: none;
+    padding: 100px 20px;
+    height: 100%;
+}
+
+.tablink{
+    background-color: #0b70bd;
+    color: white;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 13px 20px;
+    font-size: 17px;
+    width: 25%;
+    text-align: center;
+}
+
+.tablink:hover {
+    background-color: #777;
+}
+
+
+.top-section{
+    min-height:40%;
+    padding:0;
+}
+
+.toolzip {
+
+}
+
+.toolzip. tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    top: -5px;
+    left: 110%;
+}
+
+.toolzip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: 100%;
+    margin-top: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #555 transparent transparent transparent;
+}
+
+.toolzip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
+#zone-shp-upload-input {
+  border: none;
+  width: 500px;
+}
+
+#Manhole {background-color: red;}
+
+

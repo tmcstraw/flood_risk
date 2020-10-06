@@ -1,0 +1,268 @@
+{% extends "flood_risk/base.html" %}
+{% load tethys_gizmos %}
+{% load staticfiles %}
+
+{% block header_buttons %}
+    {% url 'flood_risk:building' as building_url %}
+    {% url 'flood_risk:street' as street_url %}
+    {% url 'flood_risk:manhole' as manhole_url %}
+    {% url 'flood_risk:pipe' as pipe_url %}
+    <div class="header">
+        <div>
+            <a href="{{ building_url }}" type="button" class="current">Building</a>
+            <a href="{{ street_url }}" type="button" class="tablink">Street</a>
+            <a href="{{ manhole_url }}" type="button" class="tablink">Manhole</a>
+            <a href="{{ pipe_url }}" type="button" class="tablink">Pipe</a>
+        </div>
+    </div>
+
+    <div class="header-button glyphicon-button" data-toggle="tooltip" data-placement="bottom" title="Help">
+        <a data-toggle="modal" data-target="#building-modal"><span class="glyphicon glyphicon-question-sign"></span></a>
+    </div>
+{% endblock %}
+
+{% block app_navigation_items %}
+  {% url 'flood_risk:building' as building_url %}
+  {% url 'flood_risk:street' as street_url %}
+  {% url 'flood_risk:manhole' as manhole_url %}
+  {% url 'flood_risk:pipe' as pipe_url %}
+
+  <li class="title">Navigation</li>
+  <li class = "{% if request.path == building_url %}active{% endif %}"><a href="{{ building_url }}">Building Risk</a></li>
+  <li class = "{% if request.path == street_url %}active{% endif %}"><a href="{{ street_url }}">Street Risk</a></li>
+  <li class = "{% if request.path == manhole_url %}active{% endif %}"><a href="{{ manhole_url }}">Manhole Risk</a></li>
+  <li class = "{% if request.path == pipe_url %}active{% endif %}"><a href="{{ pipe_url }}">Pipe Risk</a></li>
+
+{% endblock %}
+
+{% block app_content %}
+    <div class="input-menu" id="building-menu">
+        <form action="" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group building_upload">
+                <label class ="control-label" for="bldg-shp-upload-input">Building Shapefile</label>
+                <input id ="bldg-shp-upload-input" class="shp-upload-input" name="bldg-shp-upload-input" style="display:inline-block;" type="file" accept = ".shp, .shx, .prj, .dbf" multiple>
+                <br>
+                <div id="bldgid-select" style="display:inline-block;">
+                <label for="bldg-field-select-0" style="padding-rigth:5px;">Building ID Field:</label>
+                    <select id="bldg-field-select-0">
+                        <option value="">Select Field</option>
+                    </select>
+                <text id="bldg-field-select-0-error"> </text>
+                </div>
+                <br>
+                <label class ="control-label" id ="label-buffer-input" for="buffer-input">Building Buffer: </label><input type="number" min="0.001" id="buffer-input" name="buffer_input" placeholder="5.0">
+                <a data-toggle="modal" data-target="#building-buffer-modal"><span class="glyphicon glyphicon-info-sign"></span></a>
+                <text id="buffer-input-error"> </text>
+                <br>
+            </div>
+
+            <div class="form-group inundation_upload">
+                <label class ="control-label" for="depth-shp-upload-input">Inundation Raster</label>
+                <input id ="depth-shp-upload-input" class="shp-upload-input" name="depth-shp-upload-input" style="display:inline-block;" type="file" accept = ".tif, .tfw, .xml, .ovr" multiple>
+                <br>
+            </div>
+
+            <div class="form-group tax_upload">
+                <label class ="control-label" for="tax-shp-upload-input">Tax Parcel Shapefile</label>
+                <input id ="tax-shp-upload-input" class="shp-upload-input" name="tax-shp-upload-input" style="display:inline-block;" type="file" accept = ".shp, .shx, .prj, .dbf" multiple>
+                <br>
+                <div id="taxid-select" style="display:inline-block;">
+                <label for="tax-field-select-0" style="padding-rigth:5px;">Tax Parcel ID Field:</label>
+                    <select id="tax-field-select-0">
+                        <option value="">Select Field</option>
+                    </select>
+                <text id="tax-field-select-0-error"> </text>
+                <br>
+                <label for="tax-field-select-1" style="padding-rigth:5px;">Building Value Field:</label>
+                    <select id="tax-field-select-1">
+                        <option value="">Select Field</option>
+                    </select>
+                <a data-toggle="modal" data-target="#building-tax-modal"><span class="glyphicon glyphicon-info-sign"></span></a>
+                <text id="tax-field-select-1-error"> </text>
+                </div>
+                <br><br>
+                <b>Depth vs. Building Value Depreciation</b><br>
+                <text class ="control-label bldg-depth-lab" id ="label-depth-value-0">0.00</text> < Depth &le; <input type="number" class = "bldg-depth-val" min="0" id="depth-value-0" name="depth-value-0" value="0.25">
+                <label class ="control-label bldg-lab" id ="label-building-value-0" for="building-value-0"></label>Building Value Lost: <input type="number" class="bldg-val" min="0" id="building-value-0" name="building-value-0" value="25">%
+                <br>
+                <text class ="control-label bldg-depth-lab" id ="label-depth-value-1">0.25</text> < Depth &le; <input type="number" class = "bldg-depth-val" min="0" id="depth-value-1" name="depth-value-1" value="0.5">
+                <label class ="control-label bldg-lab" id ="label-building-value-1" for="building-value-1"></label>Building Value Lost: <input type="number" class="bldg-val" min="0" id="building-value-1" name="building-value-1" value="50">%
+                <br>
+                <text class ="control-label bldg-depth-lab" id ="label-depth-value-2">0.50</text> < Depth &le; <input type="number" class = "bldg-depth-val" min="0" id="depth-value-2" name="depth-value-2" value="1.0">
+                <label class ="control-label bldg-lab" id ="label-building-value-2" for="building-value-2"></label>Building Value Lost: <input type="number" class="bldg-val" min="0" id="building-value-2" name="building-value-2" value=75>%
+                <br>
+                <label class ="control-label bldg-depth-lab-first" id ="label-depth-value-3" for="depth-value-3"></label>Depth > <input type="number" class = "bldg-depth-val" min="0" id="depth-value-3" name="depth-value-3" value="1.0">
+                <label class ="control-label bldg-lab" id ="label-building-value-3" for="building-value-3"></label>Building Value Lost: <input type="number" class="bldg-val" min="0" id="building-value-3" name="building-value-3" value="100">%
+                <br><br>
+            </div>
+
+            <div class="form-group landuse_upload">
+                <label class ="control-label" for="landuse-shp-upload-input">Land Use Shapefile</label>
+                <input id ="landuse-shp-upload-input" class="shp-upload-input" name="landuse-shp-upload-input" style="display:inline-block;" type="file" accept = ".shp, .shx, .prj, .dbf" multiple>
+                <br>
+                <div id="landuseid-select" style="display:inline-block;">
+                <label for="landuse-field-select-0" style="padding-rigth:5px;">Land Use ID Field:</label>
+                    <select id="landuse-field-select-0">
+                        <option value="">Select Field</option>
+                    </select>
+                <text id="landuse-field-select-0-error"> </text>
+                <br>
+                <label for="landuse-field-select-1" style="padding-rigth:5px;">Land Use Code Field:</label>
+                    <select id="landuse-field-select-1">
+                        <option value="">Select Field</option>
+                    </select>
+                <a data-toggle="modal" data-target="#building-landuse-modal"><span class="glyphicon glyphicon-info-sign"></span></a>
+                <text id="landuse-field-select-1-error"> </text>
+                </div>
+                <br>
+                <label for="residential-landuse-checkboxes" style="padding-rigth:5px;">Residential Land Use Code:</label>
+                <br>
+                <div id="residential-landuse-checkboxes"></div>
+                <br>
+            </div>
+        {% gizmo button submit_buildings %}
+        </form>
+    </div>
+    <button type = "button" class = "btn collapsible"><i class="fa fa-toggle-up"></i></button>
+    <button class="btn hideDiv downloadBtn" id="download_button" onclick="downloadFile()"><i class="fa fa-download"></i> Shapefile</button>
+
+    <div class="map" id="building_map">
+        {% gizmo map_view %}
+        <div id="popup"></div>
+    </div>
+{% endblock %}
+
+{% block after_app_content %}
+  <div class="modal fade" id="loading-modal" tabindex="-1" role="dialog" aria-labelledby="help-modal-label">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h5 class="modal-title" style="text-align:center;" id="modal-category">Loading Results/Generating Map...</h5>
+        </div>
+        <div class="modal-body" style="text-align:center;" id="chart-loading-modal-body">
+            <img src="{% static 'flood_risk/images/loading.gif' %}" style="align:center;" width="150" height="150" alt="Loading Please Wait ...">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="popup-modal" tabindex="-1" role="dialog" aria-labelledby="help-modal-label">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        </div>
+        <div class="modal-body">
+            <div id="myPopup"></div>
+        </div>
+        <div class="modal-footer">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="building-modal" tabindex="-1" role="dialog" aria-labelledby="help-modal-label">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h5 class="modal-title" id="help-modal-label">Building Page</h5>
+        </div>
+        <div class="modal-body">
+            <p><b>This estimates the building value lost due to flooding and determines the fraction of residential loss. The result is a Landuse_Inundation shapefile with a flood depth (Max_Depth), building value loss (Lost_Value), and Residential/Nonresidential (Residential) field.</b></p>
+            <p>Building Shapefile: Polygon shapefile showing footprint of buildings (accepts .shp, .shx, .prj, .dbf, .cpg, .sbn, .sbx, and .xml file types).</p>
+            <p>Building ID Field: The name of the field with unique IDs for each building.</p>
+            <p>Building Buffer: The radius around each building outline to extract the maximum depth, in the same units as raster file. It is recommended that this value be greater than 0.5 ft.</p>
+            <p>Inundation Raster: Flood depth raster (accepts .tif, .tfw, .xml, and .ovr file types).</p>
+            <p>Tax Parcel Shapefile: Polygon shapefile showing the footprint of each tax parcel (accepts .shp, .shx, .prj, .dbf, .cpg, .sbn, .sbx, and .xml file types).</p>
+            <p>Tax Parcel ID Field: The name of the field with unique IDs for each tax parcel.</p>
+            <p>Building Value Field: The name of the field with dollar values for each tax parcel.</p>
+            <p>Depth vs. Building Value Depreciation: The percentage of each building value lost when flooded to a specified depth.</p>
+            <p>Land Use Shapefile: Polygon shapefile showing footprint of land use parcels (accepts .shp, .shx, .prj, .dbf, .cpg, .sbn, .sbx, and .xml file types).</p>
+            <p>Land Use ID Field: The name of the field with unique IDs for each parcel.</p>
+            <p>Land Use Code Field: The name of the field with land use designations for each parcel.</p>
+            <p>Residential Land Use Code: The land use code associated with residential land use parcels.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="building-buffer-modal" tabindex="-1" role="dialog" aria-labelledby="help-modal-label">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        </div>
+        <div class="modal-body">
+            <p>Radius around each building outline to extract the maximum depth, in the same units as raster file. It is recommended that this value be greater than 0.5 ft</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="building-landuse-modal" tabindex="-1" role="dialog" aria-labelledby="help-modal-label">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        </div>
+        <div class="modal-body">
+            <p>Name of the field with land use designations for each parcel (ex. A for residential B for commercial)</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="building-tax-modal" tabindex="-1" role="dialog" aria-labelledby="help-modal-label">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        </div>
+        <div class="modal-body">
+            <p>Field name with dollar values for each tax parcel (ex. BLDGVAL)</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block content_dependent_styles %}
+    {{ block.super }}
+    <link href="{% static 'flood_risk/css/main.css' %}" rel="stylesheet"/>
+    <link rel="stylesheet" href="{% static 'flood_risk/css/map.css' %}" />
+    <link rel="stylesheet" href="https://cdn.rawgit.com/Viglino/ol-ext/master/dist/ol-ext.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://openlayers.org/en/latest/css/ol.css" />
+{% endblock %}
+
+{% block scripts %}
+    {{ block.super }}
+    <script type="text/javascript" src="https://cdn.rawgit.com/Viglino/ol-ext/master/dist/ol-ext.min.js"></script>
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <script src="https://js.arcgis.com/4.15/"></script>
+    <script src="{% static 'flood_risk/js/building.js' %}" type="text/javascript"></script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/Viglino/ol-ext/master/dist/extra/FontAwesomeDef.js"></script>
+    <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=requestAnimationFrame,Element.prototype.classList,URL,Object.assign"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.3/FileSaver.min.js"></script>
+{% endblock %}
